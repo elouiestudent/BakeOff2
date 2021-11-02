@@ -105,9 +105,8 @@ void draw() {
   translate(logoX, logoY); //translate draw center to the center of the logo square
   rotate(radians(logoRotation)); //rotate using the logo square as the origin
   noStroke();
-  if (!checkForSuccess())
-        fill(60, 60, 192, 192);
-   else fill(32, 190, 21); 
+  if (!checkForSuccess()) fill(60, 60, 192, 192);
+  else fill(32, 190, 21); 
    
   rect(0, 0, logoZ, logoZ);
   popMatrix();
@@ -192,8 +191,10 @@ void mouseReleased()
   }
   
   color c = get(mouseX, mouseY);
-  if ((blue(c) > 100 && red(c) < 250) || green(c) == 190)
+  if ((blue(c) == 155) || green(c) == 190) {
     isDragging = !isDragging;
+    print(blue(c));
+  }
 }
 
 void mouseMoved() {
@@ -212,10 +213,10 @@ public boolean checkForSuccess()
     closeRotation = calculateDifferenceBetweenAngles(d.rotation, logoRotation)<=5;
     closeZ = abs(d.z - logoZ)<inchToPix(.1f); //has to be within +-0.1"  
   
-    println("Close Enough Distance: " + closeDist + " (logo X/Y = " + d.x + "/" + d.y + ", destination X/Y = " + logoX + "/" + logoY +")");
-    println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(d.rotation, logoRotation)+")");
-    println("Close Enough Z: " +  closeZ + " (logo Z = " + d.z + ", destination Z = " + logoZ +")");
-    println("Close enough all: " + (closeDist && closeRotation && closeZ));
+    //println("Close Enough Distance: " + closeDist + " (logo X/Y = " + d.x + "/" + d.y + ", destination X/Y = " + logoX + "/" + logoY +")");
+    //println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(d.rotation, logoRotation)+")");
+    //println("Close Enough Z: " +  closeZ + " (logo Z = " + d.z + ", destination Z = " + logoZ +")");
+    //println("Close enough all: " + (closeDist && closeRotation && closeZ));
   }
 
   return closeDist && closeRotation && closeZ;
