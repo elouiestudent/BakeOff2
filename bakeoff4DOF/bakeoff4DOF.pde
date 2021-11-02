@@ -189,7 +189,7 @@ void mouseReleased()
   }
   
   color c = get(mouseX, mouseY);
-  if ((blue(c) > 100) || green(c) == 190)
+  if ((blue(c) > 100 && red(c) < 255) || green(c) == 190)
     isDragging = !isDragging;
 }
 
