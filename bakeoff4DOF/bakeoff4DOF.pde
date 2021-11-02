@@ -11,6 +11,9 @@ float errorPenalty = 0.5f; //for every error, add this value to mean time
 int startTime = 0; // time starts when the first click is captured
 int finishTime = 0; //records the time of the final click
 boolean userDone = false; //is the user done
+boolean closeDist = false;
+boolean closeRotation = false;
+boolean closeZ = false;
 
 final int screenPPI = 72; //what is the DPI of the screen you are using
 //you can test this by drawing a 72x72 pixel rectangle in code, and then confirming with a ruler it is 1x1 inch. 
@@ -61,6 +64,7 @@ void setup() {
 
 
 void draw() {
+  checkForSuccess();
 
   background(40); //background is dark grey
   fill(200);
@@ -85,8 +89,11 @@ void draw() {
     rotate(radians(d.rotation)); //rotate around the origin of the destination trial
     noFill();
     strokeWeight(3f);
-    if (trialIndex==i)
-      stroke(255, 0, 0, 192); //set color to semi translucent
+    if (trialIndex==i) {
+      if (!checkForSuccess())
+        stroke(255, 0, 0, 192); //set color to semi translucent
+      else stroke(32, 190, 21); 
+    }
     else
       stroke(128, 128, 128, 128); //set color to semi translucent
     rect(0, 0, d.z, d.z);
@@ -98,7 +105,10 @@ void draw() {
   translate(logoX, logoY); //translate draw center to the center oft he logo square
   rotate(radians(logoRotation)); //rotate using the logo square as the origin
   noStroke();
-  fill(60, 60, 192, 192);
+  if (!checkForSuccess())
+        fill(60, 60, 192, 192);
+   else fill(32, 190, 21); 
+   
   rect(0, 0, logoZ, logoZ);
   popMatrix();
 
@@ -106,6 +116,24 @@ void draw() {
   fill(255);
   scaffoldControlLogic(); //you are going to want to replace this!
   text("Trial " + (trialIndex+1) + " of " +trialCount, width/2, inchToPix(.8f));
+  
+  // code for indicators
+  if (closeDist) fill(32, 190, 21); 
+  else fill(244, 60, 20);
+  rect(75, 100, 100, 50, 20); //dist
+  
+  if (closeRotation) fill(32, 190, 21);  
+  else fill(244, 60, 20);
+  rect(75, 160, 100, 50, 20); //rotation
+  
+  if (closeZ) fill(32, 190, 21); 
+  else fill(244, 60, 20);
+  rect(75, 220, 100, 50, 20); //size
+  
+  fill(255, 255, 255);
+  text("distance", 75, 105);
+  text("rotation", 75, 165);
+  text("size", 75, 225);
 }
 
 //my example design for control, which is terrible
@@ -175,15 +203,17 @@ void mouseMoved() {
 //probably shouldn't modify this, but email me if you want to for some good reason.
 public boolean checkForSuccess()
 {
-  Destination d = destinations.get(trialIndex);	
-  boolean closeDist = dist(d.x, d.y, logoX, logoY)<inchToPix(.05f); //has to be within +-0.05"
-  boolean closeRotation = calculateDifferenceBetweenAngles(d.rotation, logoRotation)<=5;
-  boolean closeZ = abs(d.z - logoZ)<inchToPix(.1f); //has to be within +-0.1"	
-
-  println("Close Enough Distance: " + closeDist + " (logo X/Y = " + d.x + "/" + d.y + ", destination X/Y = " + logoX + "/" + logoY +")");
-  println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(d.rotation, logoRotation)+")");
-  println("Close Enough Z: " +  closeZ + " (logo Z = " + d.z + ", destination Z = " + logoZ +")");
-  println("Close enough all: " + (closeDist && closeRotation && closeZ));
+  if (trialIndex < destinations.size()) {
+    Destination d = destinations.get(trialIndex);  
+    closeDist = dist(d.x, d.y, logoX, logoY)<inchToPix(.05f); //has to be within +-0.05"
+    closeRotation = calculateDifferenceBetweenAngles(d.rotation, logoRotation)<=5;
+    closeZ = abs(d.z - logoZ)<inchToPix(.1f); //has to be within +-0.1"  
+  
+    println("Close Enough Distance: " + closeDist + " (logo X/Y = " + d.x + "/" + d.y + ", destination X/Y = " + logoX + "/" + logoY +")");
+    println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(d.rotation, logoRotation)+")");
+    println("Close Enough Z: " +  closeZ + " (logo Z = " + d.z + ", destination Z = " + logoZ +")");
+    println("Close enough all: " + (closeDist && closeRotation && closeZ));
+  }
 
   return closeDist && closeRotation && closeZ;
 }
