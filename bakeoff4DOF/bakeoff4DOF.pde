@@ -21,6 +21,8 @@ float logoY = 500;
 float logoZ = 50f;
 float logoRotation = 0;
 
+boolean isDragging = false;
+
 private class Destination
 {
   float x = 0;
@@ -128,23 +130,8 @@ void scaffoldControlLogic()
   text("+", width-inchToPix(.4f), height-inchToPix(.4f));
   if (mousePressed && dist(width, height, mouseX, mouseY)<inchToPix(.8f))
     logoZ = constrain(logoZ+inchToPix(.02f), .01, inchToPix(4f)); //leave min and max alone! 
-
-  //left middle, move left
-  text("left", inchToPix(.4f), height/2);
-  if (mousePressed && dist(0, height/2, mouseX, mouseY)<inchToPix(.8f))
-    logoX-=inchToPix(.02f);
-
-  text("right", width-inchToPix(.4f), height/2);
-  if (mousePressed && dist(width, height/2, mouseX, mouseY)<inchToPix(.8f))
-    logoX+=inchToPix(.02f);
-
-  text("up", width/2, inchToPix(.4f));
-  if (mousePressed && dist(width/2, 0, mouseX, mouseY)<inchToPix(.8f))
-    logoY-=inchToPix(.02f);
-
-  text("down", width/2, height-inchToPix(.4f));
-  if (mousePressed && dist(width/2, height, mouseX, mouseY)<inchToPix(.8f))
-    logoY+=inchToPix(.02f);
+  
+  text("submit", width/2, inchToPix(.4f));
 }
 
 void mousePressed()
@@ -159,7 +146,7 @@ void mousePressed()
 void mouseReleased()
 {
   //check to see if user clicked middle of screen within 3 inches, which this code uses as a submit button
-  if (dist(width/2, height/2, mouseX, mouseY)<inchToPix(3f))
+  if (dist(width/2, 0, mouseX, mouseY)<inchToPix(.8f))
   {
     if (userDone==false && !checkForSuccess())
       errorCount++;
@@ -171,6 +158,17 @@ void mouseReleased()
       userDone = true;
       finishTime = millis();
     }
+  }
+  
+  color c = get(mouseX, mouseY);
+  if (blue(c) > 100)
+    isDragging = !isDragging;
+}
+
+void mouseMoved() {
+  if (isDragging) {
+    logoX += mouseX - pmouseX; 
+    logoY += mouseY - pmouseY;
   }
 }
 
