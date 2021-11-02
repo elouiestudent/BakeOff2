@@ -113,8 +113,9 @@ void draw() {
   popMatrix();
 
   //===========DRAW EXAMPLE CONTROLS=================
-  fill(255);
+  
   scaffoldControlLogic(); //you are going to want to replace this!
+  fill(255);
   text("Trial " + (trialIndex+1) + " of " +trialCount, width/2, inchToPix(.8f));
   
   // code for indicators
@@ -139,6 +140,7 @@ void draw() {
 //my example design for control, which is terrible
 void scaffoldControlLogic()
 {
+  fill(255);
   //upper left corner, rotate counterclockwise
   text("CCW", inchToPix(.4f), inchToPix(.4f));
   if (mousePressed && dist(0, 0, mouseX, mouseY)<inchToPix(.8f))
@@ -159,6 +161,7 @@ void scaffoldControlLogic()
   if (mousePressed && dist(width, height, mouseX, mouseY)<inchToPix(.8f))
     logoZ = constrain(logoZ+inchToPix(.02f), .01, inchToPix(4f)); //leave min and max alone! 
   
+  fill(60, 148, 56); 
   text("submit", width/2, inchToPix(.4f));
 }
 
@@ -189,7 +192,7 @@ void mouseReleased()
   }
   
   color c = get(mouseX, mouseY);
-  if ((blue(c) > 100 && red(c) < 255) || green(c) == 190)
+  if ((blue(c) > 100 && red(c) < 250) || green(c) == 190)
     isDragging = !isDragging;
 }
 
