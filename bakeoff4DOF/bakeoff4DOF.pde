@@ -102,7 +102,7 @@ void draw() {
 
   //===========DRAW LOGO SQUARE=================
   pushMatrix();
-  translate(logoX, logoY); //translate draw center to the center oft he logo square
+  translate(logoX, logoY); //translate draw center to the center of the logo square
   rotate(radians(logoRotation)); //rotate using the logo square as the origin
   noStroke();
   if (!checkForSuccess())
@@ -118,15 +118,15 @@ void draw() {
   text("Trial " + (trialIndex+1) + " of " +trialCount, width/2, inchToPix(.8f));
   
   // code for indicators
-  if (closeDist) fill(32, 190, 21); 
+  if (closeDist) fill(60, 148, 56); 
   else fill(244, 60, 20);
   rect(75, 100, 100, 50, 20); //dist
   
-  if (closeRotation) fill(32, 190, 21);  
+  if (closeRotation) fill(60, 148, 56); 
   else fill(244, 60, 20);
   rect(75, 160, 100, 50, 20); //rotation
   
-  if (closeZ) fill(32, 190, 21); 
+  if (closeZ) fill(60, 148, 56); 
   else fill(244, 60, 20);
   rect(75, 220, 100, 50, 20); //size
   
@@ -189,7 +189,7 @@ void mouseReleased()
   }
   
   color c = get(mouseX, mouseY);
-  if (blue(c) > 100)
+  if ((blue(c) > 100) || green(c) == 190)
     isDragging = !isDragging;
 }
 
