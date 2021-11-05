@@ -124,7 +124,7 @@ void draw() {
   // code for indicators
   if (closeDist) fill(60, 148, 56); 
   else fill(244, 60, 20);
-  rect(75, 100, 100, 50, 20); //dist
+  rect(75, 100, 100, 50, 20); //location
   
   if (closeRotation) fill(60, 148, 56); 
   else fill(244, 60, 20);
@@ -135,7 +135,7 @@ void draw() {
   rect(75, 220, 100, 50, 20); //size
   
   fill(255, 255, 255);
-  text("distance", 75, 105);
+  text("location", 75, 105);
   text("rotation", 75, 165);
   text("size", 75, 225);
   
