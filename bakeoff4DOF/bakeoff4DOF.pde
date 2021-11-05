@@ -25,6 +25,8 @@ float logoZ = 50f;
 float logoRotation = 0;
 
 boolean isDragging = false;
+boolean isRotating = false;
+//boolean isResizing = false;
 
 private class Destination
 {
@@ -134,6 +136,51 @@ void draw() {
   text("distance", 75, 105);
   text("rotation", 75, 165);
   text("size", 75, 225);
+  
+  //float lbotcx = -logoZ / 2;
+  //float lbotcy = logoZ / 2;
+  //float ltopcx = -logoZ / 2;
+  //float ltopcy = -logoZ / 2;
+  //float rbotcx = logoZ / 2;
+  //float rbotcy = logoZ / 2;
+  //float rtopcx = logoZ / 2;
+  //float rtopcy = -logoZ / 2;
+  
+  //float rotlbotcx = lbotcx * cos(logoRotation) - lbotcy * sin(logoRotation);
+  //float rotlbotcy = lbotcx * sin(logoRotation) - lbotcy * cos(logoRotation);
+  //float rotltopcx = ltopcx * cos(logoRotation) - ltopcy * sin(logoRotation);
+  //float rotltopcy = ltopcx * sin(logoRotation) - ltopcy * cos(logoRotation);
+  //float rotrbotcx = rbotcx * cos(logoRotation) - rbotcy * sin(logoRotation);
+  //float rotrbotcy = rbotcx * sin(logoRotation) - rbotcy * cos(logoRotation);
+  //float rotrtopcx = rtopcx * cos(logoRotation) - rtopcy * sin(logoRotation);
+  //float rotrtopcy = rtopcx * sin(logoRotation) - rtopcy * cos(logoRotation);
+
+  //lbotcx = rotlbotcx + logoX;
+  //lbotcy = rotlbotcy + logoY;
+  //ltopcx = rotltopcx + logoX;
+  //ltopcy = rotltopcy + logoY;
+  //rbotcx = rotrbotcx + logoX;
+  //rbotcy = rotrbotcy + logoY;
+  //rtopcx = rotrtopcx + logoX;
+  //rtopcy = rotrtopcy + logoY;
+  
+  //float margin = inchToPix(.1f);
+  //if (dist(lbotcx, lbotcy, mouseX, mouseY) < margin) {
+  //  fill(244, 60, 20);
+  //  circle(lbotcx, lbotcy, 2 * margin);
+  //}
+  //else if (dist(ltopcx, ltopcy, mouseX, mouseY) < margin) {
+  //  fill(244, 60, 20);
+  //  circle(ltopcx, ltopcy, 2 * margin);
+  //}
+  //else if (dist(rbotcx, rbotcy, mouseX, mouseY) < margin) {
+  //  fill(244, 60, 20);
+  //  circle(rbotcx, rbotcy, 2 * margin);
+  //}
+  //else if (dist(rtopcx, rtopcy, mouseX, mouseY) < margin) {
+  //  fill(244, 60, 20);
+  //  circle(rtopcx, rtopcy, 2 * margin);
+  //}
 }
 
 //my example design for control, which is terrible
@@ -141,14 +188,14 @@ void scaffoldControlLogic()
 {
   fill(255);
   //upper left corner, rotate counterclockwise
-  text("CCW", inchToPix(.4f), inchToPix(.4f));
-  if (mousePressed && dist(0, 0, mouseX, mouseY)<inchToPix(.8f))
-    logoRotation--;
+  //text("CCW", inchToPix(.4f), inchToPix(.4f));
+  //if (mousePressed && dist(0, 0, mouseX, mouseY)<inchToPix(.8f))
+  //  logoRotation--;
 
   //upper right corner, rotate clockwise
-  text("CW", width-inchToPix(.4f), inchToPix(.4f));
-  if (mousePressed && dist(width, 0, mouseX, mouseY)<inchToPix(.8f))
-    logoRotation++;
+  //text("CW", width-inchToPix(.4f), inchToPix(.4f));
+  //if (mousePressed && dist(width, 0, mouseX, mouseY)<inchToPix(.8f))
+  //  logoRotation++;
 
   //lower left corner, decrease Z
   text("-", inchToPix(.4f), height-inchToPix(.4f));
@@ -171,6 +218,14 @@ void mousePressed()
     startTime = millis();
     println("time started!");
   }
+  color c = get(mouseX, mouseY);
+  if (blue(c) == 155 || green(c) == 190) {
+    isDragging = true;
+  //} else if (red(c) == 244 && green(c) == 60 && blue(c) == 20) {
+  //  isResizing = true;
+  } else {
+    isRotating = true;
+  }
 }
 
 void mouseReleased()
@@ -189,18 +244,27 @@ void mouseReleased()
       finishTime = millis();
     }
   }
-  
-  color c = get(mouseX, mouseY);
-  if ((blue(c) == 155) || green(c) == 190) {
-    isDragging = !isDragging;
-    print(blue(c));
-  }
+  isDragging = false;
+  isRotating = false;
+  //isResizing = false;
 }
 
-void mouseMoved() {
+void mouseDragged() {
   if (isDragging) {
     logoX += mouseX - pmouseX; 
     logoY += mouseY - pmouseY;
+  //} else if (isResizing) {
+  //  float diff = dist(mouseX, mouseY, logoX, logoY) - dist(pmouseX, pmouseY, logoX, logoY);
+  //  logoZ = constrain(logoZ + diff, .01, inchToPix(4f));
+  } else if (isRotating) {
+    float x1 = pmouseX - logoX;
+    float y1 = pmouseY - logoY;
+    float x2 = mouseX - logoX;
+    float y2 = mouseY - logoY;
+    float d1 = sqrt(x1 * x1 + y1 * y1);
+    float d2 = sqrt(x2 * x2 + y2 * y2);
+    float rot = asin((x1 / d1) * (y2 / d2) - (y1 / d1) * (x2 / d2));
+    logoRotation += rot * 50;
   }
 }
 
