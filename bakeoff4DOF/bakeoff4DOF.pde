@@ -14,11 +14,12 @@ boolean userDone = false; //is the user done
 boolean closeDist = false;
 boolean closeRotation = false;
 boolean closeZ = false;
+float targetX;
+float targetY;
 
 final int screenPPI = 72; //what is the DPI of the screen you are using
 //you can test this by drawing a 72x72 pixel rectangle in code, and then confirming with a ruler it is 1x1 inch. 
 
-//These variables are for my example design. Your input code should modify/replace these!
 float logoX = 500;
 float logoY = 500;
 float logoZ = 50f;
@@ -64,7 +65,6 @@ void setup() {
 }
 
 
-
 void draw() {
   checkForSuccess();
 
@@ -92,6 +92,8 @@ void draw() {
     noFill();
     strokeWeight(3f);
     if (trialIndex==i) {
+      targetX = d.x;
+      targetY = d.y;
       if (!checkForSuccess())
         stroke(255, 0, 0, 192); //set color to semi translucent
       else stroke(32, 190, 21); 
@@ -115,9 +117,9 @@ void draw() {
 
   //===========DRAW EXAMPLE CONTROLS=================
   
-  scaffoldControlLogic(); //you are going to want to replace this!
+  scaffoldControlLogic(); 
   fill(255);
-  text("Trial " + (trialIndex+1) + " of " +trialCount, width/2, inchToPix(.8f));
+  text("Trial " + (trialIndex+1) + " of " +trialCount, 80, inchToPix(.8f));
   
   // code for indicators
   if (closeDist) fill(60, 148, 56); 
@@ -181,9 +183,24 @@ void draw() {
   //  fill(244, 60, 20);
   //  circle(rtopcx, rtopcy, 2 * margin);
   //}
+  
+  strokeWeight(3);
+  stroke(255,0,0);
+  float d = dist(targetX, targetY, logoX, logoY);
+  float angle = atan2(targetY - logoY, targetX - logoX) * 180/PI;
+  drawArrow(int(logoX),int(logoY),int(d), angle);
 }
 
-//my example design for control, which is terrible
+void drawArrow(int cx, int cy, int len, float angle){
+  pushMatrix();
+  translate(cx, cy);
+  rotate(radians(angle));
+  line(0,0,len, 0);
+  line(len, 0, len - 8, -8);
+  line(len, 0, len - 8, 8);
+  popMatrix();
+}
+
 void scaffoldControlLogic()
 {
   fill(255);
@@ -197,17 +214,26 @@ void scaffoldControlLogic()
   //if (mousePressed && dist(width, 0, mouseX, mouseY)<inchToPix(.8f))
   //  logoRotation++;
 
-  //lower left corner, decrease Z
-  text("-", inchToPix(.4f), height-inchToPix(.4f));
-  if (mousePressed && dist(0, height, mouseX, mouseY)<inchToPix(.8f))
+  //decrease Z
+  fill(100);
+  rect(width-100, 45, 35, 35, 20);
+  fill(255);
+  text("-", width-100, 50);
+  if (mousePressed && dist(width-100, 45, mouseX, mouseY)<inchToPix(.5f))
     logoZ = constrain(logoZ-inchToPix(.02f), .01, inchToPix(4f)); //leave min and max alone!
 
-  //lower right corner, increase Z
-  text("+", width-inchToPix(.4f), height-inchToPix(.4f));
-  if (mousePressed && dist(width, height, mouseX, mouseY)<inchToPix(.8f))
+  //increase Z
+  fill(100);
+  rect(width-50, 45, 35, 35, 20);
+  fill(255);
+  text("+", width-50, 53);
+  if (mousePressed && dist(width-50, 48, mouseX, mouseY)<inchToPix(.5f))
     logoZ = constrain(logoZ+inchToPix(.02f), .01, inchToPix(4f)); //leave min and max alone! 
   
+  //submit button
   fill(60, 148, 56); 
+  rect(width/2, inchToPix(.4f)-7, 115, 65, 20);
+  fill(255);
   text("submit", width/2, inchToPix(.4f));
 }
 
@@ -230,8 +256,8 @@ void mousePressed()
 
 void mouseReleased()
 {
-  //check to see if user clicked middle of screen within 3 inches, which this code uses as a submit button
-  if (dist(width/2, 0, mouseX, mouseY)<inchToPix(.8f))
+  //check to see if user clicked submit button
+  if (dist(width/2, inchToPix(.4f), mouseX, mouseY) < inchToPix(0.7f))
   {
     if (userDone==false && !checkForSuccess())
       errorCount++;
@@ -277,10 +303,10 @@ public boolean checkForSuccess()
     closeRotation = calculateDifferenceBetweenAngles(d.rotation, logoRotation)<=5;
     closeZ = abs(d.z - logoZ)<inchToPix(.1f); //has to be within +-0.1"  
   
-    //println("Close Enough Distance: " + closeDist + " (logo X/Y = " + d.x + "/" + d.y + ", destination X/Y = " + logoX + "/" + logoY +")");
-    //println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(d.rotation, logoRotation)+")");
-    //println("Close Enough Z: " +  closeZ + " (logo Z = " + d.z + ", destination Z = " + logoZ +")");
-    //println("Close enough all: " + (closeDist && closeRotation && closeZ));
+    println("Close Enough Distance: " + closeDist + " (logo X/Y = " + d.x + "/" + d.y + ", destination X/Y = " + logoX + "/" + logoY +")");
+    println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(d.rotation, logoRotation)+")");
+    println("Close Enough Z: " +  closeZ + " (logo Z = " + d.z + ", destination Z = " + logoZ +")");
+    println("Close enough all: " + (closeDist && closeRotation && closeZ));
   }
 
   return closeDist && closeRotation && closeZ;
