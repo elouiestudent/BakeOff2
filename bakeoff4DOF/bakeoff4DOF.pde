@@ -274,12 +274,13 @@ void mousePressed()
 
 void mouseReleased()
 {
-  //check to see if user clicked submit button
+  //check to see if user clicked submit
+
   //if (dist(width/2, inchToPix(.4f), mouseX, mouseY) < inchToPix(0.7f))
-  if (checkForSuccess() && dist(targetX, targetY, mouseX, mouseY) < inchToPix(0.5f))
+  if (checkForSuccess() && dist(targetX, targetY, mouseX, mouseY) < inchToPix(0.5f)) 
   {
-    if (userDone==false && !checkForSuccess())
-      errorCount++;
+    //if (userDone==false && !checkForSuccess())
+    //  errorCount++;
 
     trialIndex++; //and move on to next trial
 
@@ -289,6 +290,7 @@ void mouseReleased()
       finishTime = millis();
     }
   }
+
   isDragging = false;
   isRotating = false;
   //isResizing = false;
