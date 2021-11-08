@@ -279,9 +279,10 @@ void mouseReleased()
   //if (dist(width/2, inchToPix(.4f), mouseX, mouseY) < inchToPix(0.7f))
   if (checkForSuccess() && dist(targetX, targetY, mouseX, mouseY) < inchToPix(0.5f)) 
   {
-    //if (userDone==false && !checkForSuccess())
-    //  errorCount++;
-
+    if (userDone==false && !checkForSuccess())
+      errorCount++;
+    
+    logoZ = 50f;
     trialIndex++; //and move on to next trial
 
     if (trialIndex==trialCount && userDone==false)
