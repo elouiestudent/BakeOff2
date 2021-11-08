@@ -104,21 +104,36 @@ void draw() {
     popMatrix();
   }
   
+  //========== DRAW ARROW =====================
   strokeWeight(3);
-  stroke(255,0,0);
   float d = dist(targetX, targetY, logoX, logoY);
   float angle = atan2(targetY - logoY, targetX - logoX) * 180/PI;
-  drawArrow(int(logoX),int(logoY),int(d), angle);
+  if (checkForSuccess()) {
+    stroke(32, 190, 21); 
+  }
+  else {
+    stroke(255,0,0);
+    drawArrow(int(logoX),int(logoY),int(d), angle);
+  }
+  
 
   //===========DRAW LOGO SQUARE=================
   pushMatrix();
   translate(logoX, logoY); //translate draw center to the center of the logo square
   rotate(radians(logoRotation)); //rotate using the logo square as the origin
   noStroke();
-  if (!checkForSuccess()) fill(60, 60, 192, 192);
-  else fill(32, 190, 21); 
-   
-  rect(0, 0, logoZ, logoZ);
+  if (!checkForSuccess()) {
+    fill(60, 60, 192, 192);
+    rect(0, 0, logoZ, logoZ);
+  }
+  else  {
+    fill(32, 190, 21); 
+    rect(0, 0, logoZ, logoZ);
+    fill(255);
+    rotate(-radians(logoRotation));
+    text("submit", 0, 0);
+  }
+  
   popMatrix();
 
   //===========DRAW EXAMPLE CONTROLS=================
@@ -130,20 +145,20 @@ void draw() {
   // code for indicators
   if (closeDist) fill(60, 148, 56); 
   else fill(244, 60, 20);
-  rect(75, 100, 100, 50, 20); //location
+  rect(40, 100, 170, 50, 20); //location
   
   if (closeRotation) fill(60, 148, 56); 
   else fill(244, 60, 20);
-  rect(75, 160, 100, 50, 20); //rotation
+  rect(40, 160, 170, 50, 20); //rotation
   
   if (closeZ) fill(60, 148, 56); 
   else fill(244, 60, 20);
-  rect(75, 220, 100, 50, 20); //size
+  rect(40, 220, 170, 50, 20); //size
   
   fill(255, 255, 255);
   text("location", 75, 105);
   text("rotation", 75, 165);
-  text("size", 75, 225);
+  text("size", 61, 225);
   
   //float lbotcx = -logoZ / 2;
   //float lbotcy = logoZ / 2;
@@ -231,10 +246,10 @@ void scaffoldControlLogic()
     logoZ = constrain(logoZ+inchToPix(.02f), .01, inchToPix(4f)); //leave min and max alone! 
   
   //submit button
-  fill(60, 148, 56); 
-  rect(width/2, inchToPix(.4f)-7, 115, 65, 20);
-  fill(255);
-  text("submit", width/2, inchToPix(.4f));
+  //fill(60, 148, 56); 
+  //rect(width/2, inchToPix(.4f)-7, 115, 65, 20);
+  //fill(255);
+  //text("submit", width/2, inchToPix(.4f));
 }
 
 void mousePressed()
@@ -260,7 +275,8 @@ void mousePressed()
 void mouseReleased()
 {
   //check to see if user clicked submit button
-  if (dist(width/2, inchToPix(.4f), mouseX, mouseY) < inchToPix(0.7f))
+  //if (dist(width/2, inchToPix(.4f), mouseX, mouseY) < inchToPix(0.7f))
+  if (checkForSuccess() && dist(targetX, targetY, mouseX, mouseY) < inchToPix(0.5f))
   {
     if (userDone==false && !checkForSuccess())
       errorCount++;
