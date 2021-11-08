@@ -103,6 +103,12 @@ void draw() {
     rect(0, 0, d.z, d.z);
     popMatrix();
   }
+  
+  strokeWeight(3);
+  stroke(255,0,0);
+  float d = dist(targetX, targetY, logoX, logoY);
+  float angle = atan2(targetY - logoY, targetX - logoX) * 180/PI;
+  drawArrow(int(logoX),int(logoY),int(d), angle);
 
   //===========DRAW LOGO SQUARE=================
   pushMatrix();
@@ -183,12 +189,6 @@ void draw() {
   //  fill(244, 60, 20);
   //  circle(rtopcx, rtopcy, 2 * margin);
   //}
-  
-  strokeWeight(3);
-  stroke(255,0,0);
-  float d = dist(targetX, targetY, logoX, logoY);
-  float angle = atan2(targetY - logoY, targetX - logoX) * 180/PI;
-  drawArrow(int(logoX),int(logoY),int(d), angle);
 }
 
 void drawArrow(int cx, int cy, int len, float angle){
@@ -245,12 +245,15 @@ void mousePressed()
     println("time started!");
   }
   color c = get(mouseX, mouseY);
-  if (blue(c) == 155 || green(c) == 190) {
-    isDragging = true;
+  //println(red(c));
+  //println(blue(c));
+  //println(green(c));
+  if (red(c) == blue(c) && blue(c) == green(c)) {
+    isRotating = true;
   //} else if (red(c) == 244 && green(c) == 60 && blue(c) == 20) {
   //  isResizing = true;
   } else {
-    isRotating = true;
+    isDragging = true;
   }
 }
 
@@ -303,10 +306,10 @@ public boolean checkForSuccess()
     closeRotation = calculateDifferenceBetweenAngles(d.rotation, logoRotation)<=5;
     closeZ = abs(d.z - logoZ)<inchToPix(.1f); //has to be within +-0.1"  
   
-    println("Close Enough Distance: " + closeDist + " (logo X/Y = " + d.x + "/" + d.y + ", destination X/Y = " + logoX + "/" + logoY +")");
-    println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(d.rotation, logoRotation)+")");
-    println("Close Enough Z: " +  closeZ + " (logo Z = " + d.z + ", destination Z = " + logoZ +")");
-    println("Close enough all: " + (closeDist && closeRotation && closeZ));
+    //println("Close Enough Distance: " + closeDist + " (logo X/Y = " + d.x + "/" + d.y + ", destination X/Y = " + logoX + "/" + logoY +")");
+    //println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(d.rotation, logoRotation)+")");
+    //println("Close Enough Z: " +  closeZ + " (logo Z = " + d.z + ", destination Z = " + logoZ +")");
+    //println("Close enough all: " + (closeDist && closeRotation && closeZ));
   }
 
   return closeDist && closeRotation && closeZ;
