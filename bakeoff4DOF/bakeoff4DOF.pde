@@ -230,20 +230,20 @@ void scaffoldControlLogic()
   //  logoRotation++;
 
   //decrease Z
-  fill(100);
-  rect(width-100, 45, 35, 35, 20);
-  fill(255);
-  text("-", width-100, 50);
-  if (mousePressed && dist(width-100, 45, mouseX, mouseY)<inchToPix(.5f))
-    logoZ = constrain(logoZ-inchToPix(.02f), .01, inchToPix(4f)); //leave min and max alone!
+  //fill(100);
+  //rect(width-100, 45, 35, 35, 20);
+  //fill(255);
+  //text("-", width-100, 50);
+  //if (mousePressed && dist(width-100, 45, mouseX, mouseY)<inchToPix(.5f))
+  //  logoZ = constrain(logoZ-inchToPix(.02f), .01, inchToPix(4f)); //leave min and max alone!
 
   //increase Z
-  fill(100);
-  rect(width-50, 45, 35, 35, 20);
-  fill(255);
-  text("+", width-50, 53);
-  if (mousePressed && dist(width-50, 48, mouseX, mouseY)<inchToPix(.5f))
-    logoZ = constrain(logoZ+inchToPix(.02f), .01, inchToPix(4f)); //leave min and max alone! 
+  //fill(100);
+  //rect(width-50, 45, 35, 35, 20);
+  //fill(255);
+  //text("+", width-50, 53);
+  //if (mousePressed && dist(width-50, 48, mouseX, mouseY)<inchToPix(.5f))
+  //  logoZ = constrain(logoZ+inchToPix(.02f), .01, inchToPix(4f)); //leave min and max alone! 
   
   //submit button
   //fill(60, 148, 56); 
@@ -310,6 +310,10 @@ void mouseDragged() {
     float d2 = sqrt(x2 * x2 + y2 * y2);
     float rot = asin((x1 / d1) * (y2 / d2) - (y1 / d1) * (x2 / d2));
     logoRotation += rot * 50;
+    
+    // change size
+    float d = dist(mouseX, mouseY, logoX, logoY);
+    logoZ = d;
   }
 }
 
