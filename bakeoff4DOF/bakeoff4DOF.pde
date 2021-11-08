@@ -123,7 +123,8 @@ void draw() {
   rotate(radians(logoRotation)); //rotate using the logo square as the origin
   noStroke();
   if (!checkForSuccess()) {
-    fill(60, 60, 192, 192);
+    //fill(60, 60, 192, 192);
+    fill(84, 235, 255, 192);
     rect(0, 0, logoZ, logoZ);
   }
   else  {
