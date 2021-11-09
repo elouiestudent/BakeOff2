@@ -27,7 +27,6 @@ float logoRotation = 0;
 
 boolean isDragging = false;
 boolean isRotating = false;
-//boolean isResizing = false;
 
 private class Destination
 {
@@ -160,51 +159,6 @@ void draw() {
   text("location", 75, 105);
   text("rotation", 75, 165);
   text("size", 61, 225);
-  
-  //float lbotcx = -logoZ / 2;
-  //float lbotcy = logoZ / 2;
-  //float ltopcx = -logoZ / 2;
-  //float ltopcy = -logoZ / 2;
-  //float rbotcx = logoZ / 2;
-  //float rbotcy = logoZ / 2;
-  //float rtopcx = logoZ / 2;
-  //float rtopcy = -logoZ / 2;
-  
-  //float rotlbotcx = lbotcx * cos(logoRotation) - lbotcy * sin(logoRotation);
-  //float rotlbotcy = lbotcx * sin(logoRotation) - lbotcy * cos(logoRotation);
-  //float rotltopcx = ltopcx * cos(logoRotation) - ltopcy * sin(logoRotation);
-  //float rotltopcy = ltopcx * sin(logoRotation) - ltopcy * cos(logoRotation);
-  //float rotrbotcx = rbotcx * cos(logoRotation) - rbotcy * sin(logoRotation);
-  //float rotrbotcy = rbotcx * sin(logoRotation) - rbotcy * cos(logoRotation);
-  //float rotrtopcx = rtopcx * cos(logoRotation) - rtopcy * sin(logoRotation);
-  //float rotrtopcy = rtopcx * sin(logoRotation) - rtopcy * cos(logoRotation);
-
-  //lbotcx = rotlbotcx + logoX;
-  //lbotcy = rotlbotcy + logoY;
-  //ltopcx = rotltopcx + logoX;
-  //ltopcy = rotltopcy + logoY;
-  //rbotcx = rotrbotcx + logoX;
-  //rbotcy = rotrbotcy + logoY;
-  //rtopcx = rotrtopcx + logoX;
-  //rtopcy = rotrtopcy + logoY;
-  
-  //float margin = inchToPix(.1f);
-  //if (dist(lbotcx, lbotcy, mouseX, mouseY) < margin) {
-  //  fill(244, 60, 20);
-  //  circle(lbotcx, lbotcy, 2 * margin);
-  //}
-  //else if (dist(ltopcx, ltopcy, mouseX, mouseY) < margin) {
-  //  fill(244, 60, 20);
-  //  circle(ltopcx, ltopcy, 2 * margin);
-  //}
-  //else if (dist(rbotcx, rbotcy, mouseX, mouseY) < margin) {
-  //  fill(244, 60, 20);
-  //  circle(rbotcx, rbotcy, 2 * margin);
-  //}
-  //else if (dist(rtopcx, rtopcy, mouseX, mouseY) < margin) {
-  //  fill(244, 60, 20);
-  //  circle(rtopcx, rtopcy, 2 * margin);
-  //}
 }
 
 void drawArrow(int cx, int cy, int len, float angle){
@@ -260,24 +214,8 @@ void mousePressed()
     startTime = millis();
     println("time started!");
   }
-  color c = get(mouseX, mouseY);
-  //println(red(c));
-  //println(blue(c));
-  //println(green(c));
-  if (red(c) == blue(c) && blue(c) == green(c)) {
-    isRotating = true;
-  //} else if (red(c) == 244 && green(c) == 60 && blue(c) == 20) {
-  //  isResizing = true;
-  } else {
-    isDragging = true;
-  }
-}
-
-void mouseReleased()
-{
+  
   //check to see if user clicked submit
-
-  //if (dist(width/2, inchToPix(.4f), mouseX, mouseY) < inchToPix(0.7f))
   if (checkForSuccess() && dist(targetX, targetY, mouseX, mouseY) < inchToPix(0.5f)) 
   {
     if (userDone==false && !checkForSuccess())
@@ -291,20 +229,26 @@ void mouseReleased()
       userDone = true;
       finishTime = millis();
     }
+  } else {
+    color c = get(mouseX, mouseY);
+    if (red(c) == blue(c) && blue(c) == green(c)) {
+      isRotating = true;
+    } else {
+      isDragging = true;
+    }
   }
+}
 
+void mouseReleased()
+{
   isDragging = false;
   isRotating = false;
-  //isResizing = false;
 }
 
 void mouseDragged() {
   if (isDragging) {
     logoX += mouseX - pmouseX; 
     logoY += mouseY - pmouseY;
-  //} else if (isResizing) {
-  //  float diff = dist(mouseX, mouseY, logoX, logoY) - dist(pmouseX, pmouseY, logoX, logoY);
-  //  logoZ = constrain(logoZ + diff, .01, inchToPix(4f));
   } else if (isRotating) {
     float x1 = pmouseX - logoX;
     float y1 = pmouseY - logoY;
